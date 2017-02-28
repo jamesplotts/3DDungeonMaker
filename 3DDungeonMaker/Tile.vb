@@ -14,7 +14,7 @@ Namespace OpenForge.Development
     Public Class Tile
         
         Public Name As String
-        Public TopDownImage As Image
+
         Public IsoImages() As Image
 
 
@@ -28,15 +28,16 @@ Namespace OpenForge.Development
 
 
         <Xml.Serialization.XmlIgnore> _
-        Public PaletteImage As Image
+        Public PaletteImage(4) As Image
 
         <Browsable(False), EditorBrowsable(EditorBrowsableState.Never)> _
         <Xml.Serialization.XmlElement("PaletteImage")> _
-        Public Property PaletteImageSerialized As Byte()
+        Public Property PaletteImageSerialized(index As Int32) As Byte()
             Get
-                If PaletteImage Is Nothing Then Return Nothing
+                If index < 0 OrElse index > 3 Then Return Nothing
+                If PaletteImage(index) Is Nothing Then Return Nothing
                 Using ms As MemoryStream = New MemoryStream()
-                    PaletteImage.Save(ms, ImageFormat.Bmp)
+                    PaletteImage(index).Save(ms, ImageFormat.Bmp)
                     Return ms.ToArray()
                 End Using
             End Get
@@ -45,7 +46,7 @@ Namespace OpenForge.Development
                     PaletteImage = Nothing
                 Else
                     Using ms As MemoryStream = New MemoryStream(value)
-                        PaletteImage = New Bitmap(ms)
+                        PaletteImage(index) = New Bitmap(ms)
                     End Using
                 End If
             End Set

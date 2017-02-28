@@ -47,7 +47,7 @@ Namespace OpenForge.Development
                             ltile = New Tile(Path.GetFileNameWithoutExtension(F), sArray(0), Single.Parse(sArray(1)), Single.Parse(sArray(2)))
                             tf = F.Substring(0, F.Length - 4) + ".png"
                             tf2 = F.Substring(0, F.Length - 4) + ".top.png"
-                            ltile.PaletteImage = Bitmap.FromFile(tf)
+                            ltile.PaletteImage(0) = Bitmap.FromFile(tf)
                             ltile.TileImage = Bitmap.FromFile(tf2)
                             pvt_Tiles.Add(ltile)
                         End If
