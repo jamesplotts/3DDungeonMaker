@@ -12,19 +12,6 @@ Namespace OpenForge.Development
 
     <SerializableAttribute, Xml.Serialization.XmlInclude(GetType(Tile))> _
     Public Class Tile
-        
-        Public Name As String
-        Public WebUrl As String
-
-
-        Public X As Single
-        Public Y As Single
-        Public Width As Single
-        Public Height As Single
-        Public Orientation As eOrientation
-
-        Public IsoImages() As Image
-
 
         Public Enum eOrientation
             Zero
@@ -33,16 +20,18 @@ Namespace OpenForge.Development
             TwoSeventy
             Unspecified
         End Enum
+        Public Name As String
+        Public WebUrl As String
+        Public X As Single
+        Public Y As Single
+        Public Width As Single
+        Public Height As Single
+        Public Orientation As eOrientation
+        <Xml.Serialization.XmlIgnore> Public TileImage As Image
+        <Xml.Serialization.XmlIgnore> Public PaletteImage(4) As Image
 
-
-        <Xml.Serialization.XmlIgnore> _
-        Public TileImage As Image
-
-        <Xml.Serialization.XmlIgnore> _
-        Public PaletteImage(4) As Image
-
-        <Browsable(False), EditorBrowsable(EditorBrowsableState.Never)> _
-        <Xml.Serialization.XmlElement("PaletteImage")> _
+#Region "XML Serialization Properties"
+        <Browsable(False), EditorBrowsable(EditorBrowsableState.Never), Xml.Serialization.XmlElement("PaletteImage")> _
         Public Property PaletteImageSerialized(index As Int32) As Byte()
             Get
                 If index < 0 OrElse index > 3 Then Return Nothing
@@ -63,8 +52,7 @@ Namespace OpenForge.Development
             End Set
         End Property
 
-        <Browsable(False), EditorBrowsable(EditorBrowsableState.Never)> _
-        <Xml.Serialization.XmlElement("TileImage")> _
+        <Browsable(False), EditorBrowsable(EditorBrowsableState.Never), Xml.Serialization.XmlElement("TileImage")> _
         Public Property TileImageSerialized As Byte()
             Get
                 If TileImage Is Nothing Then Return Nothing
@@ -83,8 +71,7 @@ Namespace OpenForge.Development
                 End If
             End Set
         End Property
-
-
+#End Region
 
         Public Sub New()
 
