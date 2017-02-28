@@ -60,8 +60,10 @@
     <Compile Include="Map.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="STLLoader.vb" />
     <Compile Include="Tile.vb" />
     <Compile Include="Tileset.vb" />
+    <Compile Include="VertexPositionColorNormal.vb" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

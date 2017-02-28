@@ -160,7 +160,7 @@ Partial Class MainForm
             Me.TabPage2.Location = New System.Drawing.Point(4, 22)
             Me.TabPage2.Name = "TabPage2"
             Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-            Me.TabPage2.Size = New System.Drawing.Size(735, 352)
+            Me.TabPage2.Size = New System.Drawing.Size(735, 330)
             Me.TabPage2.TabIndex = 1
             Me.TabPage2.Text = "3D Preview"
             Me.TabPage2.UseVisualStyleBackColor = True
@@ -171,7 +171,7 @@ Partial Class MainForm
             Me.pctSurface.Dock = System.Windows.Forms.DockStyle.Fill
             Me.pctSurface.Location = New System.Drawing.Point(3, 3)
             Me.pctSurface.Name = "pctSurface"
-            Me.pctSurface.Size = New System.Drawing.Size(729, 346)
+            Me.pctSurface.Size = New System.Drawing.Size(729, 324)
             Me.pctSurface.TabIndex = 1
             Me.pctSurface.TabStop = False
             '

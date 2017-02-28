@@ -1,4 +1,7 @@
-﻿Imports Microsoft.Xna.Framework
+﻿' Copyright 2017 by James Plotts.
+' Licensed under Gnu GPL 3.0.
+
+Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
 Imports Microsoft.Xna.Framework.Input
 Imports System

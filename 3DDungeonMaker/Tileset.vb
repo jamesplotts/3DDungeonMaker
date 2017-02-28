@@ -1,4 +1,6 @@
-﻿Imports System.Runtime.Serialization
+﻿' Copyright 2017 by James Plotts.
+' Licensed under Gnu GPL 3.0.
+Imports System.Runtime.Serialization
 Imports System.IO
 Imports System.Collections.Generic
 Imports System.Drawing

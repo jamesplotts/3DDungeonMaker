@@ -1,4 +1,7 @@
-﻿Imports System
+﻿' Copyright 2017 by James Plotts.
+' Licensed under Gnu GPL 3.0.
+
+Imports System
 Imports System.Windows.Forms
 
 
