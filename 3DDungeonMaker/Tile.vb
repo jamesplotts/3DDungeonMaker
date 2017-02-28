@@ -14,6 +14,14 @@ Namespace OpenForge.Development
     Public Class Tile
         
         Public Name As String
+        Public WebUrl As String
+
+
+        Public X As Single
+        Public Y As Single
+        Public Width As Single
+        Public Height As Single
+        Public Orientation As eOrientation
 
         Public IsoImages() As Image
 
@@ -26,6 +34,9 @@ Namespace OpenForge.Development
             Unspecified
         End Enum
 
+
+        <Xml.Serialization.XmlIgnore> _
+        Public TileImage As Image
 
         <Xml.Serialization.XmlIgnore> _
         Public PaletteImage(4) As Image
@@ -52,9 +63,6 @@ Namespace OpenForge.Development
             End Set
         End Property
 
-        <Xml.Serialization.XmlIgnore> _
-        Public TileImage As Image
-
         <Browsable(False), EditorBrowsable(EditorBrowsableState.Never)> _
         <Xml.Serialization.XmlElement("TileImage")> _
         Public Property TileImageSerialized As Byte()
@@ -77,50 +85,10 @@ Namespace OpenForge.Development
         End Property
 
 
-        Public WebUrl As String
-
-
-        Public X As Single
-        Public Y As Single
-        Public Width As Single
-        Public Height As Single
-        Public Orientation As eOrientation
 
         Public Sub New()
 
         End Sub
-
-
-
-        'Protected Sub New(ByVal info As SerializationInfo, ByVal context As StreamingContext)
-        '    pvt_Name = info.GetString("TileName")
-        '    pvt_PaletteImage = info.GetValue("PaletteImage", GetType(Image))
-        '    pvt_TileImage = info.GetValue("TileImage", GetType(Image))
-        '    pvt_WebUrl = info.GetString("WebUrl")
-        '    X = info.GetInt32("X")
-        '    Y = info.GetInt32("Y")
-        '    Width = info.GetInt32("Width")
-        '    Height = info.GetInt32("Height")
-        '    Orientation = info.GetInt32("Orientation")
-
-        'End Sub
-
-
-        '<SecurityPermissionAttribute(SecurityAction.Demand, _
-        '      SerializationFormatter:=True)> _
-        'Public Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
-        '    info.AddValue("TileName", pvt_Name)
-        '    info.AddValue("PaletteImage", pvt_PaletteImage)
-        '    info.AddValue("TileImage", pvt_TileImage)
-        '    info.AddValue("WebUrl", pvt_WebUrl)
-
-
-        '    info.AddValue("X", X)
-        '    info.AddValue("Y", Y)
-        '    info.AddValue("Width", Width)
-        '    info.AddValue("Height", Height)
-        '    info.AddValue("Orientation", Orientation)
-        'End Sub
 
         Public Sub New(ByVal vTile As Tile)
             With vTile
