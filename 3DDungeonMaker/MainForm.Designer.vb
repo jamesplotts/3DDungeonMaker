@@ -1,4 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿namespace EternalCodeworks.ForgeWorks
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class MainForm
     Inherits System.Windows.Forms.Form
 
@@ -127,3 +129,5 @@ Partial Class MainForm
     Friend WithEvents pctSurface As System.Windows.Forms.PictureBox
     Friend WithEvents SplitContainer2 As System.Windows.Forms.SplitContainer
 End Class
+
+end namespace

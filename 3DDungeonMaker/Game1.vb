@@ -3,21 +3,26 @@ Imports Microsoft.Xna.Framework.Graphics
 Imports Microsoft.Xna.Framework.Input
 Imports System
 
-Namespace safeprojectname
+Namespace EternalCodeworks.ForgeWorks
+
+
     ''' <summary>
     ''' This is the main type for your game.
     ''' </summary>
-    Public Class Game1
+    Public Class DungeonView
         Inherits Game
         Private graphics As GraphicsDeviceManager
         Private spriteBatch As SpriteBatch
 
         Private drawSurface As IntPtr
+        Private MainForm As MainForm
 
-        Public Sub New(drawSurface As IntPtr)
+
+        Public Sub New(vMainForm As MainForm)
             graphics = New GraphicsDeviceManager(Me)
             Content.RootDirectory = "Content"
-            Me.drawSurface = drawSurface
+            Me.MainForm = vMainForm
+            Me.drawSurface = vMainForm.getDrawSurface()
             AddHandler graphics.PreparingDeviceSettings, New EventHandler(Of PreparingDeviceSettingsEventArgs)(AddressOf graphics_PreparingDeviceSettings)
             AddHandler System.Windows.Forms.Control.FromHandle((Me.Window.Handle)).VisibleChanged, New EventHandler(AddressOf Game1_VisibleChanged)
         End Sub

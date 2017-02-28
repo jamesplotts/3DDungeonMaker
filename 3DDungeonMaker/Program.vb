@@ -1,6 +1,6 @@
 ﻿Imports System.Windows.Forms
 
-Namespace safeprojectname
+Namespace EternalCodeworks.ForgeWorks
     ''' <summary>
     ''' The main class.
     ''' </summary>
@@ -15,7 +15,7 @@ Namespace safeprojectname
 
 
 #If WINDOWS OrElse LINUX Then
-            Using game = New Game1(form.getDrawSurface())
+            Using game = New DungeonView(form)
                 game.Run()
             End Using
 #End If
