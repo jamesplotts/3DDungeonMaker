@@ -57,8 +57,11 @@
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Map.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="Tile.vb" />
+    <Compile Include="Tileset.vb" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
