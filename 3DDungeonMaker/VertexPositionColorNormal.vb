@@ -3,6 +3,8 @@
 
 Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
+Imports System
+
 
 Namespace OpenForge.Development
 
@@ -40,6 +42,21 @@ Namespace OpenForge.Development
             Normal = vNor
         End Sub
 
+        Public Function IsPositionEqualTo(ByVal vCompareWith As VertexPositionColorNormal) As Boolean
+            Return vCompareWith.Position.Equals(Position)
+        End Function
+
+        Public Sub CombineWith(ByVal value As VertexPositionColorNormal)
+            With value
+                Normal = Normal * .Normal
+                Dim c As New Color(Average(.Color.R, Color.R), Average(.Color.G, Color.G), Average(.Color.B, Color.B))
+                Color = c
+            End With
+        End Sub
+
+        Private Function Average(ByVal v1 As Int32, v2 As Int32) As Int32
+            Return CInt((v1 - v2) / 2) + v2
+        End Function
 
         ''' <summary>
         ''' Necessary VertexDeclaration information to use this Vertex with GraphicsDevice.DrawUserPrimitives.

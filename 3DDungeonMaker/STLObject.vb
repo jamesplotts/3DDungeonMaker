@@ -30,6 +30,13 @@ Namespace OpenForge.Development
         Public xpixelsize As Single  ' Dimensions of grid for this model
         Public ypixelsize As Single  ' in user units.
         Public nfacets As UInt32
+        Private pvtVerticesOptimized As Boolean
+
+        Public ReadOnly Property VerticesOptimized() As Boolean
+            Get
+                Return pvtVerticesOptimized
+            End Get
+        End Property
 
         Public ReadOnly Property XCenter As Single
             Get
@@ -131,6 +138,14 @@ Namespace OpenForge.Development
             End Try
             Return vStl ' and done!
         End Function
+
+
+        Public Sub OptimizeVertices()
+            Dim v As New List(Of VertexPositionColorNormal)
+
+
+            pvtVerticesOptimized = True
+        End Sub
 
         ''' <summary>
         ''' LoadSTL reads a stream and converts the data to an STLObject.  

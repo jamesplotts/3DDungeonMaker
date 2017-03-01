@@ -92,6 +92,7 @@ Namespace EternalCodeworks.ForgeWorks
 
             ' TODO: Add your update logic here
 
+
             MyBase.Update(gameTime)
         End Sub
 
