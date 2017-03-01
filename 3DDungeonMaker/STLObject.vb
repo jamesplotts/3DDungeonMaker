@@ -9,12 +9,14 @@ Imports System.IO
 Imports System.Windows.Forms
 Imports Microsoft.Xna.Framework
 Imports System.Collections.Generic
+Imports System.Collections
 
 Namespace OpenForge.Development
 
 
     Public Class STLObject
         Public Vertices As New List(Of VertexPositionColorNormal)
+        Public Indices As New List(Of Int32)
         Public ObjectCenter As Matrix
         'id' is a null-terminated string of the form "filename.stl", where filename is the name of the converted ".bin" file.
         Public Id(22) As Char
@@ -62,9 +64,10 @@ Namespace OpenForge.Development
         ''' </summary>
         ''' <param name="stream"></param>
         ''' <param name="vcolor"></param>
+        ''' <param name="vOptimize"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function LoadSTL(ByVal stream As Stream, ByVal vcolor As Microsoft.Xna.Framework.Color) As STLObject
+        Public Shared Function LoadSTL(ByVal stream As Stream, ByVal vcolor As Microsoft.Xna.Framework.Color, Optional ByVal vOptimize As Boolean = False) As STLObject
             Dim vStl As New STLObject
             Try
                 Dim index As Int32 = 0
@@ -133,6 +136,7 @@ Namespace OpenForge.Development
                         End If
                     Next
                 End With
+                If vOptimize Then vStl.OptimizeVertices()
             Catch
                 vStl = Nothing
             End Try
@@ -141,9 +145,29 @@ Namespace OpenForge.Development
 
 
         Public Sub OptimizeVertices()
-            Dim v As New List(Of VertexPositionColorNormal)
-
-
+            Dim newlist As New List(Of VertexPositionColorNormal)
+            Dim FoundSameVert As Boolean
+            Dim index As Int32
+            Dim lIndicies As New List(Of Int32)
+            For Each v As VertexPositionColorNormal In Vertices
+                FoundSameVert = False
+                index = 0
+                For Each v2 As VertexPositionColorNormal In newlist
+                    If v.IsPositionEqualTo(v2) Then
+                        v2.CombineWith(v)
+                        lIndicies.Add(index)
+                        FoundSameVert = True
+                        Exit For
+                    End If
+                    index += 1
+                Next
+                If FoundSameVert = False Then
+                    newlist.Add(v)
+                    lIndicies.Add(index)
+                End If
+            Next
+            Vertices = newlist
+            Indices = lIndicies
             pvtVerticesOptimized = True
         End Sub
 
