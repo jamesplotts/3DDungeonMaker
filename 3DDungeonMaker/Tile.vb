@@ -9,7 +9,7 @@ Imports System.Drawing.Imaging
 Imports System
 Imports System.Drawing
 
-Namespace OpenForge.Development
+Namespace EternalCodeworks.ForgeWorks
 
     <SerializableAttribute, Xml.Serialization.XmlInclude(GetType(Tile))> _
     Public Class Tile

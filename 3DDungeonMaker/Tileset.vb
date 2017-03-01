@@ -6,7 +6,7 @@ Imports System.Collections.Generic
 Imports System.Drawing
 
 
-Namespace OpenForge.Development
+Namespace EternalCodeworks.ForgeWorks
 
 
     Public Class Tileset

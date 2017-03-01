@@ -10,8 +10,9 @@ Imports System.Windows.Forms
 Imports Microsoft.Xna.Framework
 Imports System.Collections.Generic
 Imports System.Collections
+Imports Microsoft.Xna.Framework.Graphics
 
-Namespace OpenForge.Development
+Namespace EternalCodeworks.ForgeWorks
 
 
     Public Class STLObject
@@ -173,6 +174,44 @@ Namespace OpenForge.Development
             Vertices = newlist
             Indices = lIndicies
             pvtVerticesOptimized = True
+        End Sub
+
+        Private myVertexBuffer As VertexBuffer
+        ''' <summary>
+        ''' Vertex Data stored on the Graphics Device after calling CopyToBuffers.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property VertexBuffer() As VertexBuffer
+            Get
+                Return myVertexBuffer
+            End Get
+        End Property
+
+        Private myIndexBuffer As IndexBuffer
+        ''' <summary>
+        ''' Index Data stored on the Graphics Device after calling CopyToBuffers.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property IndexBuffer() As IndexBuffer
+            Get
+                Return myIndexBuffer
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Creates vertex and index buffers on the Graphics Device and copies object vertices and indices to them.
+        ''' </summary>
+        ''' <param name="GraphicsDevice">Valid GraphicsDevice object.</param>
+        ''' <remarks></remarks>
+        Public Sub CopyToBuffers(ByVal GraphicsDevice As GraphicsDevice)
+            myVertexBuffer = New VertexBuffer(GraphicsDevice, VertexPositionColorNormal.VertexDeclaration, Vertices.Count, BufferUsage.WriteOnly)
+            myVertexBuffer.SetData(Vertices.ToArray())
+            myIndexBuffer = New IndexBuffer(GraphicsDevice, GetType(Int32), Indices.Count, BufferUsage.WriteOnly)
+            myIndexBuffer.SetData(Indices.ToArray())
         End Sub
 
         ''' <summary>

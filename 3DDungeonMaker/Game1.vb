@@ -5,6 +5,7 @@ Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Graphics
 Imports Microsoft.Xna.Framework.Input
 Imports System
+Imports System.Collections.Generic
 
 Namespace EternalCodeworks.ForgeWorks
 
@@ -16,6 +17,8 @@ Namespace EternalCodeworks.ForgeWorks
         Inherits Game
         Private graphics As GraphicsDeviceManager
         Private spriteBatch As SpriteBatch
+
+        Private stlo As STLObject
 
         Private drawSurface As IntPtr
         Private MainForm As MainForm
@@ -103,9 +106,16 @@ Namespace EternalCodeworks.ForgeWorks
         Protected Overrides Sub Draw(gameTime As GameTime)
             GraphicsDevice.Clear(Color.CornflowerBlue)
 
-            ' TODO: Add your drawing code here
 
+            ' TODO: Add your drawing coe here
+            If Not stlo Is Nothing Then
+                GraphicsDevice.Indices = stlo.IndexBuffer
+                GraphicsDevice.SetVertexBuffer(stlo.VertexBuffer)
+                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, CInt(stlo.IndexBuffer.IndexCount / 3))
+            End If
             MyBase.Draw(gameTime)
         End Sub
+
+
     End Class
 End Namespace

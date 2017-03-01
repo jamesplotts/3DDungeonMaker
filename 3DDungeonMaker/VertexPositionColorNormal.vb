@@ -6,7 +6,7 @@ Imports Microsoft.Xna.Framework.Graphics
 Imports System
 
 
-Namespace OpenForge.Development
+Namespace EternalCodeworks.ForgeWorks
 
 
     ''' <summary>

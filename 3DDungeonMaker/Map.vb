@@ -6,7 +6,7 @@ Imports System.Security.Permissions
 Imports System
 Imports System.Collections.Generic
 
-Namespace OpenForge.Development
+Namespace EternalCodeworks.ForgeWorks
 
     <SerializableAttribute> _
     Public Class Map
