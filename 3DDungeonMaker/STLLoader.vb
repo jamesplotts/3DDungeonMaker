@@ -6,6 +6,9 @@
 
 Imports System
 Imports System.IO
+Imports System.Windows.Forms
+Imports Microsoft.Xna.Framework
+Imports System.Collections.Generic
 
 Namespace OpenForge.Development
 
@@ -61,8 +64,8 @@ Namespace OpenForge.Development
 
         Public Class STLObject
             Public STLHeader As New STLHeader
-            Public Vertices() As VertexPositionColorNormal
-            Public Facets() As Facet
+            Public Vertices As New List(Of VertexPositionColorNormal)
+            Public ObjectCenter As Matrix
         End Class
 
         ''' <summary>
@@ -100,82 +103,56 @@ Namespace OpenForge.Development
                         sr.Read(tb, 0, 4)
                         .nfacets = BitConverter.ToUInt32(tb, 0)
                     End With
-                    Dim retval As Facet
-                    ReDim .Facets(CInt(.STLHeader.nfacets))
+                    'ReDim .Facets(CInt(.STLHeader.nfacets))
+                    .Vertices = New List(Of VertexPositionColorNormal)
+                    Dim vn As Vector3
+                    Dim x As Single, y As Single, z As Single
                     For i As Int32 = 0 To CInt(.STLHeader.nfacets) - 1
-                        retval = New Facet
-                        With retval
-                            With .normal
-                                .x = rc(sr)
-                                .y = rc(sr)
-                                .z = -rc(sr) ' Negative Z value Flips to our coordinate system
-                            End With
-                            With .v1
-                                .x = rc(sr)
-                                If .x < x1 Then x1 = .x
-                                If .x > x2 Then x2 = .x
-                                .y = rc(sr)
-                                If .y < y1 Then y1 = .y
-                                If .y > y2 Then y2 = .y
-                                .z = -rc(sr)
-                                If .z < z1 Then z1 = .z
-                                If .z > z2 Then z2 = .z
-                            End With
-                            With .v2
-                                .x = rc(sr)
-                                If .x < x1 Then x1 = .x
-                                If .x > x2 Then x2 = .x
-                                .y = rc(sr)
-                                If .y < y1 Then y1 = .y
-                                If .y > y2 Then y2 = .y
-                                .z = -rc(sr)
-                                If .z < z1 Then z1 = .z
-                                If .z > z2 Then z2 = .z
-                            End With
-                            With .v3
-                                .x = rc(sr)
-                                If .x < x1 Then x1 = .x
-                                If .x > x2 Then x2 = .x
-                                .y = rc(sr)
-                                If .y < y1 Then y1 = .y
-                                If .y > y2 Then y2 = .y
-                                .z = -rc(sr)
-                                If .z < z1 Then z1 = .z
-                                If .z > z2 Then z2 = .z
-                            End With
-                        End With
+                        ' Read Normal values from stream
+                        x = rc(sr)
+                        y = rc(sr)
+                        z = -rc(sr) ' Negative Z value Flips to our coordinate system
+                        vn = New Vector3(x, y, z)
+                        ' Read the 3 vectors for this triangle, expand existing bounds
+                        For j As Int32 = 0 To 2
+                            x = rc(sr) : x1 = Math.Min(x1, x) : x2 = Math.Max(x2, x)
+                            y = rc(sr) : y1 = Math.Min(y1, y) : y2 = Math.Max(y2, y)
+                            z = -rc(sr) : z1 = Math.Min(z1, y) : z2 = Math.Max(z2, z)
+                            .Vertices.Add(New VertexPositionColorNormal(New Vector3(x, y, z), Color.DarkGray, vn))
+                        Next
                         sr.Read(tb, 0, 2) ' just padding bytes not used.
-                        .Facets(i) = retval
+                        With .STLHeader
+                            vStl.ObjectCenter = Matrix.CreateTranslation(-.XCenter, -.YCenter, .ZCenter)
+                            If x1 > x2 Then
+                                .xmin = x2
+                                .xmax = x1
+                            Else
+                                .xmin = x1
+                                .xmax = x2
+                            End If
+                            If y1 > y2 Then
+                                .ymin = y2
+                                .ymax = y1
+                            Else
+                                .ymin = y1
+                                .ymax = y2
+                            End If
+                            If z1 > z2 Then
+                                .zmin = z2
+                                .zmax = z1
+                            Else
+                                .zmin = z1
+                                .zmax = z2
+                            End If
+                        End With
                     Next
-                End With
-                With vStl.STLHeader
-                    If x1 > x2 Then
-                        .xmin = x2
-                        .xmax = x1
-                    Else
-                        .xmin = x1
-                        .xmax = x2
-                    End If
-                    If y1 > y2 Then
-                        .ymin = y2
-                        .ymax = y1
-                    Else
-                        .ymin = y1
-                        .ymax = y2
-                    End If
-                    If z1 > z2 Then
-                        .zmin = z2
-                        .zmax = z1
-                    Else
-                        .zmin = z1
-                        .zmax = z2
-                    End If
                 End With
             Catch
                 vStl = Nothing
             End Try
             Return vStl
         End Function
+
 
         ''' <summary>
         ''' Reads 4 bytes from the supplied Stream,
