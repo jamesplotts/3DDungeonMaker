@@ -143,7 +143,11 @@ Namespace OpenForge.Development
             Return vStl ' and done!
         End Function
 
-
+        ''' <summary>
+        ''' Iterates through the Vertices member and eliminates duplicates. Also creates an array of indexes for use with an index buffer.
+        ''' Places index array in Indices.
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Sub OptimizeVertices()
             Dim newlist As New List(Of VertexPositionColorNormal)
             Dim FoundSameVert As Boolean
@@ -172,10 +176,9 @@ Namespace OpenForge.Development
         End Sub
 
         ''' <summary>
-        ''' LoadSTL reads a stream and converts the data to an STLObject.  
-        ''' Stream must contain an STL formatted file.
+        ''' Reads a stream and converts the data to an STLObject.  
         ''' </summary>
-        ''' <param name="stream"></param>
+        ''' <param name="stream">Stream containing a valid STL formatted file.</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function LoadSTL(ByVal stream As Stream) As STLObject

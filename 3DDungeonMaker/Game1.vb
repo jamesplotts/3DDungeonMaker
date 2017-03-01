@@ -21,7 +21,7 @@ Namespace EternalCodeworks.ForgeWorks
         Private MainForm As MainForm
 
 
-        Public Sub New(vMainForm As MainForm)
+        Public Sub New(ByRef vMainForm As MainForm)
             graphics = New GraphicsDeviceManager(Me)
             Content.RootDirectory = "Content"
             Me.MainForm = vMainForm
