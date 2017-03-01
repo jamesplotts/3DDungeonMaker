@@ -50,7 +50,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Game1.vb" />
+    <Compile Include="DungeonView.vb" />
     <Compile Include="MainForm.Designer.vb">
       <DependentUpon>MainForm.vb</DependentUpon>
     </Compile>

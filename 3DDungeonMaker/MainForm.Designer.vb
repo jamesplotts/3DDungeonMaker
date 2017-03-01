@@ -26,24 +26,27 @@ Partial Class MainForm
     Private Sub InitializeComponent()
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
             Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-            Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
-            Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-            Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
             Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-            Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+            Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
             Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
             Me.TabControl1 = New System.Windows.Forms.TabControl()
             Me.TabPage1 = New System.Windows.Forms.TabPage()
             Me.TabPage2 = New System.Windows.Forms.TabPage()
             Me.pctSurface = New System.Windows.Forms.PictureBox()
             Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-            Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
             Me.TreeView1 = New System.Windows.Forms.TreeView()
+            Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
+            Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
+            Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+            Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+            Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+            Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+            Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
+            Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
             Me.MenuStrip1.SuspendLayout()
             Me.ToolStripContainer1.ContentPanel.SuspendLayout()
             Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
             Me.ToolStripContainer1.SuspendLayout()
-            Me.ToolStrip1.SuspendLayout()
             CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SplitContainer1.Panel1.SuspendLayout()
             Me.SplitContainer1.Panel2.SuspendLayout()
@@ -54,6 +57,7 @@ Partial Class MainForm
             CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SplitContainer2.Panel1.SuspendLayout()
             Me.SplitContainer2.SuspendLayout()
+            Me.ToolStrip1.SuspendLayout()
             Me.SuspendLayout()
             '
             'MenuStrip1
@@ -64,6 +68,12 @@ Partial Class MainForm
             Me.MenuStrip1.Size = New System.Drawing.Size(970, 24)
             Me.MenuStrip1.TabIndex = 0
             Me.MenuStrip1.Text = "MenuStrip1"
+            '
+            'FileToolStripMenuItem
+            '
+            Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+            Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+            Me.FileToolStripMenuItem.Text = "File"
             '
             'ToolStripContainer1
             '
@@ -83,38 +93,6 @@ Partial Class MainForm
             'ToolStripContainer1.TopToolStripPanel
             '
             Me.ToolStripContainer1.TopToolStripPanel.Controls.Add(Me.ToolStrip1)
-            '
-            'ToolStrip1
-            '
-            Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.None
-            Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
-            Me.ToolStrip1.Location = New System.Drawing.Point(3, 0)
-            Me.ToolStrip1.Name = "ToolStrip1"
-            Me.ToolStrip1.Size = New System.Drawing.Size(35, 25)
-            Me.ToolStrip1.TabIndex = 0
-            '
-            'ToolStripButton1
-            '
-            Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-            Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
-            Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-            Me.ToolStripButton1.Name = "ToolStripButton1"
-            Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-            Me.ToolStripButton1.Text = "ToolStripButton1"
-            '
-            'FileToolStripMenuItem
-            '
-            Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-            Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-            Me.FileToolStripMenuItem.Text = "File"
-            '
-            'StatusStrip1
-            '
-            Me.StatusStrip1.Location = New System.Drawing.Point(0, 356)
-            Me.StatusStrip1.Name = "StatusStrip1"
-            Me.StatusStrip1.Size = New System.Drawing.Size(970, 22)
-            Me.StatusStrip1.TabIndex = 0
-            Me.StatusStrip1.Text = "StatusStrip1"
             '
             'SplitContainer1
             '
@@ -190,6 +168,14 @@ Partial Class MainForm
             Me.SplitContainer2.SplitterDistance = 158
             Me.SplitContainer2.TabIndex = 0
             '
+            'TreeView1
+            '
+            Me.TreeView1.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.TreeView1.Location = New System.Drawing.Point(0, 25)
+            Me.TreeView1.Name = "TreeView1"
+            Me.TreeView1.Size = New System.Drawing.Size(223, 133)
+            Me.TreeView1.TabIndex = 1
+            '
             'ToolStrip2
             '
             Me.ToolStrip2.Location = New System.Drawing.Point(0, 0)
@@ -198,13 +184,35 @@ Partial Class MainForm
             Me.ToolStrip2.TabIndex = 0
             Me.ToolStrip2.Text = "ToolStrip2"
             '
-            'TreeView1
+            'StatusStrip1
             '
-            Me.TreeView1.Dock = System.Windows.Forms.DockStyle.Fill
-            Me.TreeView1.Location = New System.Drawing.Point(0, 25)
-            Me.TreeView1.Name = "TreeView1"
-            Me.TreeView1.Size = New System.Drawing.Size(223, 133)
-            Me.TreeView1.TabIndex = 1
+            Me.StatusStrip1.Location = New System.Drawing.Point(0, 356)
+            Me.StatusStrip1.Name = "StatusStrip1"
+            Me.StatusStrip1.Size = New System.Drawing.Size(970, 22)
+            Me.StatusStrip1.TabIndex = 0
+            Me.StatusStrip1.Text = "StatusStrip1"
+            '
+            'ToolStrip1
+            '
+            Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.None
+            Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1})
+            Me.ToolStrip1.Location = New System.Drawing.Point(3, 0)
+            Me.ToolStrip1.Name = "ToolStrip1"
+            Me.ToolStrip1.Size = New System.Drawing.Size(35, 25)
+            Me.ToolStrip1.TabIndex = 0
+            '
+            'ToolStripButton1
+            '
+            Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+            Me.ToolStripButton1.Image = CType(resources.GetObject("ToolStripButton1.Image"), System.Drawing.Image)
+            Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+            Me.ToolStripButton1.Name = "ToolStripButton1"
+            Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+            Me.ToolStripButton1.Text = "ToolStripButton1"
+            '
+            'OpenFileDialog1
+            '
+            Me.OpenFileDialog1.FileName = "OpenFileDialog1"
             '
             'MainForm
             '
@@ -224,8 +232,6 @@ Partial Class MainForm
             Me.ToolStripContainer1.TopToolStripPanel.PerformLayout()
             Me.ToolStripContainer1.ResumeLayout(False)
             Me.ToolStripContainer1.PerformLayout()
-            Me.ToolStrip1.ResumeLayout(False)
-            Me.ToolStrip1.PerformLayout()
             Me.SplitContainer1.Panel1.ResumeLayout(False)
             Me.SplitContainer1.Panel2.ResumeLayout(False)
             CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -237,6 +243,8 @@ Partial Class MainForm
             Me.SplitContainer2.Panel1.PerformLayout()
             CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
             Me.SplitContainer2.ResumeLayout(False)
+            Me.ToolStrip1.ResumeLayout(False)
+            Me.ToolStrip1.PerformLayout()
             Me.ResumeLayout(False)
             Me.PerformLayout()
 
@@ -255,6 +263,10 @@ Partial Class MainForm
         Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
         Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
         Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+        Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
+        Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
+        Friend WithEvents FolderBrowserDialog1 As System.Windows.Forms.FolderBrowserDialog
+        Friend WithEvents ColorDialog1 As System.Windows.Forms.ColorDialog
     End Class
 
 end namespace
