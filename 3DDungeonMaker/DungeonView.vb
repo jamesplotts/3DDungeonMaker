@@ -23,6 +23,8 @@ Namespace EternalCodeworks.ForgeWorks
         Private drawSurface As IntPtr
         Private MainForm As MainForm
 
+        Public FileName As String = "New Dungeon"
+
 
         Public Sub New(ByRef vMainForm As MainForm)
             graphics = New GraphicsDeviceManager(Me)
