@@ -5,6 +5,7 @@ Imports System
 Imports System.Windows.Forms
 Imports System.IO
 Imports System.Drawing
+Imports System.Collections.Generic
 
 
 Namespace EternalCodeworks.ForgeWorks
@@ -12,6 +13,8 @@ Namespace EternalCodeworks.ForgeWorks
     Public Class MainForm
 
         Private pvtTopNode As TreeNode
+        Private pvtSTLObjects As New Dictionary(Of String, STLObject)
+
 
 #Region "Property getDrawSurface"
         Public ReadOnly Property getDrawSurface() As IntPtr
@@ -65,7 +68,9 @@ Namespace EternalCodeworks.ForgeWorks
                     lvPalette.Items.Add(s, i)
                     i += 1
                 Else
+                    Dim o As STLObject
 
+                    pvtSTLObjects.Add(s, Object)
                     ' TODO: Add Function call to generate tile from stl
                     lvPalette.Items.Add(s, -1)
                 End If
@@ -122,6 +127,7 @@ Namespace EternalCodeworks.ForgeWorks
             If i > 3 Then i = 0
             lvPalette.View = CType(i, View)
         End Sub
+
 #End Region
 
 

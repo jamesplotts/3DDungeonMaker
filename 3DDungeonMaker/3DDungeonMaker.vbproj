@@ -58,6 +58,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Map.vb" />
+    <Compile Include="MapPage.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
     <Compile Include="Properties\Resources.Designer.vb">
