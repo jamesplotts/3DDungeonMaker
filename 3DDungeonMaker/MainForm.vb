@@ -11,20 +11,21 @@ Namespace EternalCodeworks.ForgeWorks
 
     Public Class MainForm
 
+        Private pvtTopNode As TreeNode
 
+#Region "Property getDrawSurface"
         Public ReadOnly Property getDrawSurface() As IntPtr
             Get
                 Return pctSurface.Handle
             End Get
         End Property
-
+#End Region
 
 
         Private Sub MainForm_FormClosed(sender As Object, e As Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
             Application.Exit()
         End Sub
 
-        Private pvtTopNode As TreeNode
         Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles Me.Load
             pvtTopNode = New TreeNode("My Tiles", 0, 0)
             pvtTopNode.ToolTipText = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\My Tiles"
@@ -37,30 +38,39 @@ Namespace EternalCodeworks.ForgeWorks
             tvTileFolders.ShowNodeToolTips = True
         End Sub
 
+#Region "Palette Stuff"
+
+        Private Sub DdContainer1_DropDown(sender As Object, IsOpen As Boolean) Handles DdContainer1.DropDown
+            tvTileFolders.Width = DdContainer1.Width - 5
+        End Sub
+
         Public Sub LoadTiles(ByVal dir As String)
             If Not TryCreateDirectory(dir) Then Exit Sub
             If Not TryCreateDirectory(dir + "\cache") Then Exit Sub
             Dim contents() As String = Directory.GetFiles(dir, "*.stl")
-            ListView1.Items.Clear()
+            lvPalette.Items.Clear()
+            ilPalette.Images.Clear()
+            ilPaletteSmall.Images.Clear()
             Dim s As String, s2 As String, i As Int32
             For Each f As String In contents
                 s = Path.GetFileNameWithoutExtension(f)
                 s2 = dir + "\cache\" + s + ".Top.png"
                 If File.Exists(s2) Then
-                    ilPalette.Images.Add(New Bitmap(s2))
-                    ListView1.Items.Add(s, i)
+                    Try
+                        Dim b As Bitmap = New Bitmap(s2)
+                        ilPalette.Images.Add(b)
+                        ilPaletteSmall.Images.Add(b)
+                    Catch ex As Exception
+                    End Try
+                    lvPalette.Items.Add(s, i)
                     i += 1
                 Else
-                    ListView1.Items.Add(s, -1)
+
+                    ' TODO: Add Function call to generate tile from stl
+                    lvPalette.Items.Add(s, -1)
                 End If
-
-
             Next
-            ListView1.Refresh()
-        End Sub
-
-        Private Sub ListView1_SelectedIndexChanged(sender As Object, e As EventArgs)
-
+            lvPalette.Refresh()
         End Sub
 
         Private Sub TreeView2_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvTileFolders.AfterSelect
@@ -105,14 +115,18 @@ Namespace EternalCodeworks.ForgeWorks
             Return True
         End Function
 
-
-        Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-
+        Private Sub btnTogglePaletteView_Click(sender As Object, e As EventArgs) Handles btnTogglePaletteView.Click
+            Dim i As Int32 = lvPalette.View
+            i += 1
+            If i = 1 Then i = 2
+            If i > 3 Then i = 0
+            lvPalette.View = CType(i, View)
         End Sub
+#End Region
 
-        Private Sub DdContainer1_DropDown(sender As Object, IsOpen As Boolean) Handles DdContainer1.DropDown
-            tvTileFolders.Width = DdContainer1.Width - 5
-        End Sub
+
+
+
     End Class
 
 End Namespace

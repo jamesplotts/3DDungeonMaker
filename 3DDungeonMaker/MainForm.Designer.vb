@@ -46,10 +46,14 @@ Partial Class MainForm
             Me.TabPage2 = New System.Windows.Forms.TabPage()
             Me.pctSurface = New System.Windows.Forms.PictureBox()
             Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-            Me.ListView1 = New System.Windows.Forms.ListView()
-            Me.Panel1 = New System.Windows.Forms.Panel()
+            Me.lvPalette = New System.Windows.Forms.ListView()
+            Me.ilPalette = New System.Windows.Forms.ImageList(Me.components)
+            Me.ilPaletteSmall = New System.Windows.Forms.ImageList(Me.components)
+            Me.Panel2 = New System.Windows.Forms.Panel()
             Me.DdContainer1 = New DropDownContainer.DDContainer()
             Me.tvTileFolders = New System.Windows.Forms.TreeView()
+            Me.btnTogglePaletteView = New System.Windows.Forms.Button()
+            Me.Panel1 = New System.Windows.Forms.Panel()
             Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
             Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
             Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
@@ -62,7 +66,6 @@ Partial Class MainForm
             Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
             Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
             Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
-            Me.ilPalette = New System.Windows.Forms.ImageList(Me.components)
             Me.MenuStrip1.SuspendLayout()
             Me.ToolStripContainer1.ContentPanel.SuspendLayout()
             Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -77,7 +80,7 @@ Partial Class MainForm
             CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.SplitContainer2.Panel1.SuspendLayout()
             Me.SplitContainer2.SuspendLayout()
-            Me.Panel1.SuspendLayout()
+            Me.Panel2.SuspendLayout()
             Me.DdContainer1.SuspendLayout()
             Me.ToolStrip1.SuspendLayout()
             Me.ToolStrip2.SuspendLayout()
@@ -256,48 +259,62 @@ Partial Class MainForm
             '
             'SplitContainer2.Panel1
             '
-            Me.SplitContainer2.Panel1.Controls.Add(Me.ListView1)
+            Me.SplitContainer2.Panel1.Controls.Add(Me.lvPalette)
+            Me.SplitContainer2.Panel1.Controls.Add(Me.Panel2)
             Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
             Me.SplitContainer2.Size = New System.Drawing.Size(223, 356)
             Me.SplitContainer2.SplitterDistance = 158
             Me.SplitContainer2.TabIndex = 0
             '
-            'ListView1
+            'lvPalette
             '
-            Me.ListView1.Dock = System.Windows.Forms.DockStyle.Fill
-            Me.ListView1.GridLines = True
-            Me.ListView1.LargeImageList = Me.ilPalette
-            Me.ListView1.Location = New System.Drawing.Point(0, 21)
-            Me.ListView1.MultiSelect = False
-            Me.ListView1.Name = "ListView1"
-            Me.ListView1.Size = New System.Drawing.Size(223, 137)
-            Me.ListView1.TabIndex = 5
-            Me.ListView1.UseCompatibleStateImageBehavior = False
+            Me.lvPalette.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.lvPalette.GridLines = True
+            Me.lvPalette.LargeImageList = Me.ilPalette
+            Me.lvPalette.Location = New System.Drawing.Point(0, 26)
+            Me.lvPalette.MultiSelect = False
+            Me.lvPalette.Name = "lvPalette"
+            Me.lvPalette.Size = New System.Drawing.Size(223, 132)
+            Me.lvPalette.SmallImageList = Me.ilPaletteSmall
+            Me.lvPalette.TabIndex = 7
+            Me.lvPalette.UseCompatibleStateImageBehavior = False
             '
-            'Panel1
+            'ilPalette
             '
-            Me.Panel1.AutoSize = True
-            Me.Panel1.Controls.Add(Me.DdContainer1)
-            Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-            Me.Panel1.Location = New System.Drawing.Point(0, 0)
-            Me.Panel1.Name = "Panel1"
-            Me.Panel1.Size = New System.Drawing.Size(223, 21)
-            Me.Panel1.TabIndex = 0
+            Me.ilPalette.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit
+            Me.ilPalette.ImageSize = New System.Drawing.Size(64, 64)
+            Me.ilPalette.TransparentColor = System.Drawing.Color.Transparent
+            '
+            'ilPaletteSmall
+            '
+            Me.ilPaletteSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+            Me.ilPaletteSmall.ImageSize = New System.Drawing.Size(16, 16)
+            Me.ilPaletteSmall.TransparentColor = System.Drawing.Color.Transparent
+            '
+            'Panel2
+            '
+            Me.Panel2.Controls.Add(Me.DdContainer1)
+            Me.Panel2.Controls.Add(Me.btnTogglePaletteView)
+            Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+            Me.Panel2.Location = New System.Drawing.Point(0, 0)
+            Me.Panel2.Name = "Panel2"
+            Me.Panel2.Size = New System.Drawing.Size(223, 26)
+            Me.Panel2.TabIndex = 1
             '
             'DdContainer1
             '
             Me.DdContainer1.ButtonShape = DropDownContainer.DDContainer.eButtonShape.Square
             Me.DdContainer1.Controls.Add(Me.tvTileFolders)
             Me.DdContainer1.DDOpacity = 1.0R
-            Me.DdContainer1.Dock = System.Windows.Forms.DockStyle.Top
+            Me.DdContainer1.Dock = System.Windows.Forms.DockStyle.Fill
             Me.DdContainer1.DropControl = Me.tvTileFolders
             Me.DdContainer1.GraphicImage = Nothing
             Me.DdContainer1.HeaderHeight = 20
-            Me.DdContainer1.HeaderWidth = 223
-            Me.DdContainer1.Location = New System.Drawing.Point(0, 0)
+            Me.DdContainer1.HeaderWidth = 198
+            Me.DdContainer1.Location = New System.Drawing.Point(25, 0)
             Me.DdContainer1.Name = "DdContainer1"
             Me.DdContainer1.PanelSize = New System.Drawing.Size(196, 192)
-            Me.DdContainer1.Size = New System.Drawing.Size(223, 21)
+            Me.DdContainer1.Size = New System.Drawing.Size(198, 26)
             Me.DdContainer1.TabIndex = 3
             Me.DdContainer1.Text = "DdContainer1"
             '
@@ -307,6 +324,25 @@ Partial Class MainForm
             Me.tvTileFolders.Name = "tvTileFolders"
             Me.tvTileFolders.Size = New System.Drawing.Size(196, 192)
             Me.tvTileFolders.TabIndex = 0
+            '
+            'btnTogglePaletteView
+            '
+            Me.btnTogglePaletteView.Dock = System.Windows.Forms.DockStyle.Left
+            Me.btnTogglePaletteView.Image = CType(resources.GetObject("btnTogglePaletteView.Image"), System.Drawing.Image)
+            Me.btnTogglePaletteView.Location = New System.Drawing.Point(0, 0)
+            Me.btnTogglePaletteView.Name = "btnTogglePaletteView"
+            Me.btnTogglePaletteView.Size = New System.Drawing.Size(25, 26)
+            Me.btnTogglePaletteView.TabIndex = 0
+            Me.btnTogglePaletteView.UseVisualStyleBackColor = True
+            '
+            'Panel1
+            '
+            Me.Panel1.AutoSize = True
+            Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+            Me.Panel1.Location = New System.Drawing.Point(0, 0)
+            Me.Panel1.Name = "Panel1"
+            Me.Panel1.Size = New System.Drawing.Size(223, 0)
+            Me.Panel1.TabIndex = 0
             '
             'StatusStrip1
             '
@@ -381,12 +417,6 @@ Partial Class MainForm
             '
             Me.OpenFileDialog1.FileName = "OpenFileDialog1"
             '
-            'ilPalette
-            '
-            Me.ilPalette.ColorDepth = System.Windows.Forms.ColorDepth.Depth24Bit
-            Me.ilPalette.ImageSize = New System.Drawing.Size(100, 100)
-            Me.ilPalette.TransparentColor = System.Drawing.Color.Transparent
-            '
             'MainForm
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -416,7 +446,7 @@ Partial Class MainForm
             Me.SplitContainer2.Panel1.PerformLayout()
             CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
             Me.SplitContainer2.ResumeLayout(False)
-            Me.Panel1.ResumeLayout(False)
+            Me.Panel2.ResumeLayout(False)
             Me.DdContainer1.ResumeLayout(False)
             Me.ToolStrip1.ResumeLayout(False)
             Me.ToolStrip1.PerformLayout()
@@ -460,9 +490,12 @@ Partial Class MainForm
         Friend WithEvents tvTileFolders As System.Windows.Forms.TreeView
         Friend WithEvents ToolStrip2 As System.Windows.Forms.ToolStrip
         Friend WithEvents ToolStripButton4 As System.Windows.Forms.ToolStripButton
-        Friend WithEvents ListView1 As System.Windows.Forms.ListView
         Friend WithEvents Panel1 As System.Windows.Forms.Panel
         Friend WithEvents ilPalette As System.Windows.Forms.ImageList
+        Friend WithEvents Panel2 As System.Windows.Forms.Panel
+        Friend WithEvents btnTogglePaletteView As System.Windows.Forms.Button
+        Friend WithEvents lvPalette As System.Windows.Forms.ListView
+        Friend WithEvents ilPaletteSmall As System.Windows.Forms.ImageList
     End Class
 
 end namespace

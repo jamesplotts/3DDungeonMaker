@@ -26,6 +26,7 @@ Namespace EternalCodeworks.ForgeWorks
         Public FileName As String = "New Dungeon"
 
 
+#Region "Hidden Stuff"
         Public Sub New(ByRef vMainForm As MainForm)
             graphics = New GraphicsDeviceManager(Me)
             Content.RootDirectory = "Content"
@@ -67,6 +68,15 @@ Namespace EternalCodeworks.ForgeWorks
         End Sub
 
         ''' <summary>
+        ''' UnloadContent will be called once per game and is the place to unload
+        ''' game-specific content.
+        ''' </summary>
+        Protected Overrides Sub UnloadContent()
+            ' TODO: Unload any non ContentManager content here
+        End Sub
+
+
+        ''' <summary>
         ''' LoadContent will be called once per game and is the place to load
         ''' all of your content.
         ''' </summary>
@@ -76,14 +86,7 @@ Namespace EternalCodeworks.ForgeWorks
 
             ' TODO: use this.Content to load your game content here
         End Sub
-
-        ''' <summary>
-        ''' UnloadContent will be called once per game and is the place to unload
-        ''' game-specific content.
-        ''' </summary>
-        Protected Overrides Sub UnloadContent()
-            ' TODO: Unload any non ContentManager content here
-        End Sub
+#End Region
 
         ''' <summary>
         ''' Allows the game to run logic such as updating the world,
