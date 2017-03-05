@@ -70,7 +70,7 @@ Namespace EternalCodeworks.ForgeWorks
         End Sub
 
 
-        Private pvt_Tiles As List(Of Tile)
+        Private pvt_Tiles As New List(Of Tile)
         Public ReadOnly Property Items() As List(Of Tile)
             Get
                 Return pvt_Tiles

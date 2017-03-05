@@ -10,16 +10,37 @@ Imports System.Collections.Generic
 
 Namespace EternalCodeworks.ForgeWorks
 
+
+
+    Public Class CacheImageGenItem
+        Public stlobject As STLObject
+        Public filename As String
+        Public Drawn As Boolean
+    End Class
+
     Public Class MainForm
 
         Private pvtTopNode As TreeNode
         Private pvtSTLObjects As New Dictionary(Of String, STLObject)
+        Private pvtMainColor As Microsoft.Xna.Framework.Color
+        Private pvtMainMap As New MapPage
+        Private pvtTileset As New Tileset
+        Private pvtCacheImageGenList As New List(Of CacheImageGenItem)
+
 
 
 #Region "Property getDrawSurface"
         Public ReadOnly Property getDrawSurface() As IntPtr
             Get
                 Return pctSurface.Handle
+            End Get
+        End Property
+#End Region
+
+#Region "Property CacheImageGenList"
+        Public ReadOnly Property CacheImageGenList() As List(Of CacheImageGenItem)
+            Get
+                Return pvtCacheImageGenList
             End Get
         End Property
 #End Region
@@ -39,6 +60,7 @@ Namespace EternalCodeworks.ForgeWorks
             DdContainer1.Text = pvtTopNode.Text
             LoadTiles(pvtTopNode.ToolTipText)
             tvTileFolders.ShowNodeToolTips = True
+            TabControl1.TabPages.Add(pvtMainMap)
         End Sub
 
 #Region "Palette Stuff"
@@ -68,9 +90,14 @@ Namespace EternalCodeworks.ForgeWorks
                     lvPalette.Items.Add(s, i)
                     i += 1
                 Else
-                    Dim o As STLObject
-
-                    pvtSTLObjects.Add(s, Object)
+                    Dim fs As New FileStream(f, FileMode.Open)
+                    Dim o As STLObject = stlobject.LoadSTL(fs, pvtMainColor, True)
+                    pvtSTLObjects.Add(s, o)
+                    Dim cigitem As New CacheImageGenItem
+                    cigitem.filename = s2
+                    cigitem.stlobject = o
+                    pvtCacheImageGenList.Add(cigitem)
+                    fs.Close()
                     ' TODO: Add Function call to generate tile from stl
                     lvPalette.Items.Add(s, -1)
                 End If
@@ -83,6 +110,67 @@ Namespace EternalCodeworks.ForgeWorks
             DdContainer1.CloseDropDown()
             LoadTiles(e.Node.ToolTipText)
         End Sub
+
+        Private Sub CreateCacheImages(ByVal filename As String, ByVal stlobject As STLObject)
+
+        End Sub
+
+        'Public Sub LoadTiles()
+
+
+        '    Dim t As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments & "\My Tiles"
+
+
+
+        '    If Directory.Exists(t) Then
+        '        Dim folders() As String = Directory.GetDirectories(t)
+        '        Dim files() As String
+        '        Dim fStream As FileStream
+        '        Dim sReader As StreamReader
+        '        Dim sArray() As String
+        '        Dim ltile As Tile
+        '        Dim tf As String, tf2 As String
+        '        Dim Index As Integer = 0
+        '        pvt_Tiles = New List(Of Tile)
+        '        For Each folder As String In folders
+        '            files = Directory.GetFiles(folder, "*.txt")
+        '            For Each F As String In files
+        '                'Try
+        '                fStream = New System.IO.FileStream(F, System.IO.FileMode.Open)
+        '                sReader = New System.IO.StreamReader(fStream)
+        '                Index = 0
+        '                sArray = Nothing
+        '                Do While sReader.Peek >= 0
+        '                    ReDim Preserve sArray(Index)
+        '                    sArray(Index) = sReader.ReadLine
+        '                    Index += 1
+        '                Loop
+        '                fStream.Close()
+        '                sReader.Close()
+        '                If sArray.Length > 2 Then
+        '                    ltile = New Tile(Path.GetFileNameWithoutExtension(F), sArray(0), Single.Parse(sArray(1)), Single.Parse(sArray(2)))
+        '                    tf = F.Substring(0, F.Length - 4) + ".png"
+        '                    tf2 = F.Substring(0, F.Length - 4) + ".top.png"
+        '                    ltile.PaletteImage(0) = Bitmap.FromFile(tf)
+        '                    ltile.TileImage = Bitmap.FromFile(tf2)
+        '                    pvt_Tiles.Add(ltile)
+        '                End If
+        '                'Catch e As Exception
+
+        '                'End Try
+
+        '            Next
+
+
+        '        Next
+
+        '    Else
+        '        My.Computer.FileSystem.CreateDirectory(t)
+        '    End If
+
+
+        'End Sub
+
 
         Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
             Dim s As String = dir
@@ -128,7 +216,18 @@ Namespace EternalCodeworks.ForgeWorks
             lvPalette.View = CType(i, View)
         End Sub
 
+        Private Sub lvPalette_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lvPalette.SelectedIndexChanged
+            If lvPalette.SelectedItems.Count > 0 Then
+                Dim i As Int32 = lvPalette.SelectedItems.Item(0).ImageIndex
+                SplitContainer2.Panel2.BackgroundImage = pvtTileset.Items(i).TileImage
+                CType(TabControl1.SelectedTab, MapPage).ActiveTile = New Tile(pvtTileset.Items(i))
+            End If
+        End Sub
+
 #End Region
+
+
+
 
 
 

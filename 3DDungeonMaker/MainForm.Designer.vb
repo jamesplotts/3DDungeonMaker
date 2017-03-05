@@ -42,7 +42,6 @@ Partial Class MainForm
             Me.ToolStripContainer1 = New System.Windows.Forms.ToolStripContainer()
             Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
             Me.TabControl1 = New System.Windows.Forms.TabControl()
-            Me.TabPage1 = New System.Windows.Forms.TabPage()
             Me.TabPage2 = New System.Windows.Forms.TabPage()
             Me.pctSurface = New System.Windows.Forms.PictureBox()
             Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
@@ -210,7 +209,6 @@ Partial Class MainForm
             '
             'TabControl1
             '
-            Me.TabControl1.Controls.Add(Me.TabPage1)
             Me.TabControl1.Controls.Add(Me.TabPage2)
             Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
             Me.TabControl1.Location = New System.Drawing.Point(0, 0)
@@ -218,16 +216,6 @@ Partial Class MainForm
             Me.TabControl1.SelectedIndex = 0
             Me.TabControl1.Size = New System.Drawing.Size(743, 356)
             Me.TabControl1.TabIndex = 0
-            '
-            'TabPage1
-            '
-            Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-            Me.TabPage1.Name = "TabPage1"
-            Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-            Me.TabPage1.Size = New System.Drawing.Size(735, 330)
-            Me.TabPage1.TabIndex = 0
-            Me.TabPage1.Text = "Layout Design"
-            Me.TabPage1.UseVisualStyleBackColor = True
             '
             'TabPage2
             '
@@ -461,7 +449,6 @@ Partial Class MainForm
         Friend WithEvents FileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
         Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
         Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-        Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
         Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
         Friend WithEvents pctSurface As System.Windows.Forms.PictureBox
         Friend WithEvents SplitContainer2 As System.Windows.Forms.SplitContainer

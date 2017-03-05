@@ -88,7 +88,7 @@ Namespace EternalCodeworks.ForgeWorks
             End If
             mousex = x
             mousey = y
-            'RaiseEvent StatusTextChanged(Me, New EventArgs)
+
         End Sub
 
         Private Sub Map_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
