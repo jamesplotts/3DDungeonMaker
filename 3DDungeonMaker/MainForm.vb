@@ -12,11 +12,6 @@ Namespace EternalCodeworks.ForgeWorks
 
 
 
-    Public Class CacheImageGenItem
-        Public stlobject As STLObject
-        Public filename As String
-        Public Drawn As Boolean
-    End Class
 
     Public Class MainForm
 
@@ -25,7 +20,7 @@ Namespace EternalCodeworks.ForgeWorks
         Private pvtMainColor As Microsoft.Xna.Framework.Color
         Private pvtMainMap As New MapPage
         Private pvtTileset As New Tileset
-        Private pvtCacheImageGenList As New List(Of CacheImageGenItem)
+        Private pvtCacheImageGenList As New List(Of STLObject)
 
 
 
@@ -38,7 +33,7 @@ Namespace EternalCodeworks.ForgeWorks
 #End Region
 
 #Region "Property CacheImageGenList"
-        Public ReadOnly Property CacheImageGenList() As List(Of CacheImageGenItem)
+        Public ReadOnly Property CacheImageGenList() As List(Of STLObject)
             Get
                 Return pvtCacheImageGenList
             End Get
@@ -48,6 +43,15 @@ Namespace EternalCodeworks.ForgeWorks
 
         Private Sub MainForm_FormClosed(sender As Object, e As Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
             Application.Exit()
+        End Sub
+
+        Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+            For Each o As STLObject In pvtCacheImageGenList
+                o.CancelThreads = True
+            Next
+            For Each o As KeyValuePair(Of String, STLObject) In pvtSTLObjects
+                o.Value.CancelThreads = True
+            Next
         End Sub
 
         Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -76,10 +80,24 @@ Namespace EternalCodeworks.ForgeWorks
             lvPalette.Items.Clear()
             ilPalette.Images.Clear()
             ilPaletteSmall.Images.Clear()
+            Dim o As STLObject
             Dim s As String, s2 As String, i As Int32
             For Each f As String In contents
                 s = Path.GetFileNameWithoutExtension(f)
                 s2 = dir + "\cache\" + s + ".Top.png"
+                Try
+                    Dim fs As New FileStream(f, FileMode.Open)
+                    o = STLObject.LoadSTL(fs, pvtMainColor, True)
+                    MessageBox.Show(o.Vertices(0).ToString)
+                    pvtSTLObjects.Add(s, o)
+                    o.filename = s2
+                    pvtCacheImageGenList.Add(o)
+                    fs.Close()
+
+                Catch ex As Exception
+
+                End Try
+
                 If File.Exists(s2) Then
                     Try
                         Dim b As Bitmap = New Bitmap(s2)
@@ -90,15 +108,7 @@ Namespace EternalCodeworks.ForgeWorks
                     lvPalette.Items.Add(s, i)
                     i += 1
                 Else
-                    Dim fs As New FileStream(f, FileMode.Open)
-                    Dim o As STLObject = stlobject.LoadSTL(fs, pvtMainColor, True)
-                    pvtSTLObjects.Add(s, o)
-                    Dim cigitem As New CacheImageGenItem
-                    cigitem.filename = s2
-                    cigitem.stlobject = o
-                    pvtCacheImageGenList.Add(cigitem)
-                    fs.Close()
-                    ' TODO: Add Function call to generate tile from stl
+
                     lvPalette.Items.Add(s, -1)
                 End If
             Next
@@ -112,6 +122,10 @@ Namespace EternalCodeworks.ForgeWorks
         End Sub
 
         Private Sub CreateCacheImages(ByVal filename As String, ByVal stlobject As STLObject)
+
+        End Sub
+
+        Private Sub STLObject_OptimizationCompleted(ByVal o As Object, ByVal e As EventArgs)
 
         End Sub
 

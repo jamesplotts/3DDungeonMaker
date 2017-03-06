@@ -11,6 +11,7 @@ Imports Microsoft.Xna.Framework
 Imports System.Collections.Generic
 Imports System.Collections
 Imports Microsoft.Xna.Framework.Graphics
+Imports System.Threading
 
 Namespace EternalCodeworks.ForgeWorks
 
@@ -18,6 +19,13 @@ Namespace EternalCodeworks.ForgeWorks
     Public Class STLObject
         Public Vertices As New List(Of VertexPositionColorNormal)
         Public Indices As New List(Of Int32)
+        Public Event OptimizationCompleted(ByVal o As Object, ByVal e As EventArgs)
+
+
+        Public filename As String
+        Public CacheDrawn As Boolean
+        'Public VertexBuffer As VertexBuffer
+
         Public ObjectCenter As Matrix
         'id' is a null-terminated string of the form "filename.stl", where filename is the name of the converted ".bin" file.
         Public Id(22) As Char
@@ -34,6 +42,7 @@ Namespace EternalCodeworks.ForgeWorks
         Public ypixelsize As Single  ' in user units.
         Public nfacets As UInt32
         Private pvtVerticesOptimized As Boolean
+        Public CancelThreads As Boolean = False
 
         Public ReadOnly Property VerticesOptimized() As Boolean
             Get
@@ -137,6 +146,7 @@ Namespace EternalCodeworks.ForgeWorks
                         End If
                     Next
                 End With
+
                 If vOptimize Then vStl.OptimizeVertices()
             Catch
                 vStl = Nothing
@@ -150,6 +160,12 @@ Namespace EternalCodeworks.ForgeWorks
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub OptimizeVertices()
+            Dim thread As New Thread(AddressOf pvtOptimizeVertices)
+            thread.SetApartmentState(ApartmentState.STA)
+            thread.Start()
+        End Sub
+
+        Private Sub pvtOptimizeVertices()
             Dim newlist As New List(Of VertexPositionColorNormal)
             Dim FoundSameVert As Boolean
             Dim index As Int32
@@ -162,8 +178,10 @@ Namespace EternalCodeworks.ForgeWorks
                         v2.CombineWith(v)
                         lIndicies.Add(index)
                         FoundSameVert = True
+
                         Exit For
                     End If
+                    If CancelThreads = True Then Exit Sub
                     index += 1
                 Next
                 If FoundSameVert = False Then
@@ -174,7 +192,84 @@ Namespace EternalCodeworks.ForgeWorks
             Vertices = newlist
             Indices = lIndicies
             pvtVerticesOptimized = True
+            RaiseEvent OptimizationCompleted(Me, New EventArgs)
         End Sub
+
+        Public Sub SaveOptimized(ByVal fs As Stream)
+            If pvtVerticesOptimized = False Then Throw New Exception("Object not optimized.")
+            Dim sr As New StreamWriter(fs)
+            With sr
+                .WriteLine(xmin.ToString)
+                .WriteLine(xmax.ToString)
+                .WriteLine(ymin.ToString)
+                .WriteLine(ymax.ToString)
+                .WriteLine(zmin.ToString)
+                .WriteLine(zmax.ToString)
+                .WriteLine(xpixelsize.ToString)
+                .WriteLine(ypixelsize.ToString)
+                .WriteLine(nfacets.ToString)
+                .WriteLine(Vertices.Count.ToString)
+                For Each v As VertexPositionColorNormal In Vertices
+                    .WriteLine(v.Normal.X.ToString)
+                    .WriteLine(v.Normal.Y.ToString)
+                    .WriteLine(v.Normal.Z.ToString)
+                    .WriteLine(v.Position.X.ToString)
+                    .WriteLine(v.Position.Y.ToString)
+                    .WriteLine(v.Position.Z.ToString)
+                    .WriteLine(v.Color.R.ToString)
+                    .WriteLine(v.Color.G.ToString)
+                    .WriteLine(v.Color.B.ToString)
+                    .WriteLine(v.Color.A.ToString)
+                Next
+                .WriteLine(Indices.Count.ToString)
+                For Each i As Int32 In Indices
+                    .WriteLine(i.ToString)
+                Next
+            End With
+        End Sub
+
+        Public Shared Function LoadOptimized(ByVal fs As Stream) As STLObject
+            Dim retval As New STLObject
+            Dim sr As New StreamReader(fs)
+            Dim vPos As Vector3, vNor As Vector3, vCol As Color
+            Dim v1 As Single, v2 As Single, v3 As Single
+            Dim b1 As Byte, b2 As Byte, b3 As Byte
+            With sr
+                retval.xmin = CSng(.ReadLine())
+                retval.xmax = CSng(.ReadLine())
+                retval.ymin = CSng(.ReadLine())
+                retval.ymax = CSng(.ReadLine())
+                retval.zmin = CSng(.ReadLine())
+                retval.zmax = CSng(.ReadLine())
+                retval.xpixelsize = CSng(.ReadLine())
+                retval.ypixelsize = CSng(.ReadLine())
+                retval.nfacets = CUInt(.ReadLine())
+                Dim i As Int32 = CInt(.ReadLine())
+                For j As Int32 = 0 To i - 1
+                    v1 = CSng(.ReadLine())
+                    v2 = CSng(.ReadLine())
+                    v3 = CSng(.ReadLine())
+                    vNor = New Vector3(v1, v2, v3)
+                    v1 = CSng(.ReadLine())
+                    v2 = CSng(.ReadLine())
+                    v3 = CSng(.ReadLine())
+                    vPos = New Vector3(v1, v2, v3)
+                    b1 = CByte(.ReadLine())
+                    b2 = CByte(.ReadLine())
+                    b3 = CByte(.ReadLine())
+                    vCol = New Color(b1, b2, b3, CByte(.ReadLine()))
+                    retval.Vertices.Add(New VertexPositionColorNormal(vPos, vCol, vNor))
+                Next
+                i = CInt(sr.ReadLine())
+                For j As Int32 = 0 To i - 1
+                    retval.Indices.Add(CInt(i))
+                Next
+                retval.ObjectCenter = Matrix.CreateTranslation(-retval.XCenter, -retval.YCenter, retval.ZCenter)
+                retval.pvtVerticesOptimized = True
+            End With
+
+            Return retval
+        End Function
 
         Private myVertexBuffer As VertexBuffer
         ''' <summary>
