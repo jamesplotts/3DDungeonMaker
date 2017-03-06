@@ -84,19 +84,26 @@ Namespace EternalCodeworks.ForgeWorks
             Dim s As String, s2 As String, i As Int32
             For Each f As String In contents
                 s = Path.GetFileNameWithoutExtension(f)
-                s2 = dir + "\cache\" + s + ".Top.png"
+                s2 = dir + "\cache\" + s + ".Optimized"
                 Try
-                    Dim fs As New FileStream(f, FileMode.Open)
-                    o = STLObject.LoadSTL(fs, pvtMainColor, True)
-                    MessageBox.Show(o.Vertices(0).ToString)
-                    AddSTLObject(s, o)
-                    o.filename = f
-                    pvtCacheImageGenList.Add(o)
-                    fs.Close()
-
+                    If File.Exists(s2) Then
+                        Dim fs As New FileStream(s2, FileMode.Open)
+                        o = STLObject.LoadOptimized(fs)
+                        AddSTLObject(s, o)
+                        o.filename = f
+                        fs.Close()
+                    Else
+                        Dim fs As New FileStream(f, FileMode.Open)
+                        o = STLObject.LoadSTL(fs, pvtMainColor, True)
+                        AddSTLObject(s, o)
+                        o.filename = f
+                        pvtCacheImageGenList.Add(o)
+                        fs.Close()
+                    End If
                 Catch ex As Exception
 
                 End Try
+                s2 = dir + "\cache\" + s + ".Top.png"
 
                 If File.Exists(s2) Then
                     Try
@@ -131,8 +138,17 @@ Namespace EternalCodeworks.ForgeWorks
         End Sub
 
         Private Sub STLObject_OptimizationCompleted(ByVal o As Object, ByVal e As EventArgs)
+            Dim stlo As STLObject = CType(o, STLObject)
+            Dim s As String = Path.GetDirectoryName(stlo.filename) + "\cache\" + Path.GetFileNameWithoutExtension(stlo.filename) + ".Optimized"
+            Try
+                Dim fs As New FileStream(s, FileMode.OpenOrCreate)
+                stlo.SaveOptimized(fs)
+                fs.Close()
+            Catch ex As Exception
 
+            End Try
         End Sub
+
 
         Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
             Dim s As String = dir
