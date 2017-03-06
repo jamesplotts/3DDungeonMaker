@@ -24,9 +24,8 @@ Namespace EternalCodeworks.ForgeWorks
 
         Public filename As String
         Public CacheDrawn As Boolean
-        'Public VertexBuffer As VertexBuffer
-
         Public ObjectCenter As Matrix
+
         'id' is a null-terminated string of the form "filename.stl", where filename is the name of the converted ".bin" file.
         Public Id(22) As Char
         'date' is the date stamp in UNIX ctime() format.
@@ -43,7 +42,10 @@ Namespace EternalCodeworks.ForgeWorks
         Public nfacets As UInt32
         Private pvtVerticesOptimized As Boolean
         Public CancelThreads As Boolean = False
+        Private myVertexBuffer As VertexBuffer
+        Private myIndexBuffer As IndexBuffer
 
+#Region "Various Properties"
         Public ReadOnly Property VerticesOptimized() As Boolean
             Get
                 Return pvtVerticesOptimized
@@ -68,6 +70,33 @@ Namespace EternalCodeworks.ForgeWorks
             End Get
         End Property
 
+        ''' <summary>
+        ''' Vertex Data stored on the Graphics Device after calling CopyToBuffers.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property VertexBuffer() As VertexBuffer
+            Get
+                Return myVertexBuffer
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Index Data stored on the Graphics Device after calling CopyToBuffers.
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property IndexBuffer() As IndexBuffer
+            Get
+                Return myIndexBuffer
+            End Get
+        End Property
+
+#End Region
+
+#Region "Shared Function LoadSTL"
         ''' <summary>
         ''' LoadSTL reads a stream and converts the data to an STLObject.  
         ''' Stream must contain an STL formatted file.
@@ -153,7 +182,9 @@ Namespace EternalCodeworks.ForgeWorks
             End Try
             Return vStl ' and done!
         End Function
+#End Region
 
+#Region "Optimization Subs"
         ''' <summary>
         ''' Iterates through the Vertices member and eliminates duplicates. Also creates an array of indexes for use with an index buffer.
         ''' Places index array in Indices.
@@ -194,7 +225,9 @@ Namespace EternalCodeworks.ForgeWorks
             pvtVerticesOptimized = True
             RaiseEvent OptimizationCompleted(Me, New EventArgs)
         End Sub
+#End Region
 
+#Region "Load/Save Optimized File"
         Public Sub SaveOptimized(ByVal fs As Stream)
             If pvtVerticesOptimized = False Then Throw New Exception("Object not optimized.")
             Dim sr As New StreamWriter(fs)
@@ -265,37 +298,14 @@ Namespace EternalCodeworks.ForgeWorks
                     retval.Indices.Add(CInt(i))
                 Next
                 retval.ObjectCenter = Matrix.CreateTranslation(-retval.XCenter, -retval.YCenter, retval.ZCenter)
+
                 retval.pvtVerticesOptimized = True
             End With
-
             Return retval
         End Function
+#End Region
 
-        Private myVertexBuffer As VertexBuffer
-        ''' <summary>
-        ''' Vertex Data stored on the Graphics Device after calling CopyToBuffers.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property VertexBuffer() As VertexBuffer
-            Get
-                Return myVertexBuffer
-            End Get
-        End Property
 
-        Private myIndexBuffer As IndexBuffer
-        ''' <summary>
-        ''' Index Data stored on the Graphics Device after calling CopyToBuffers.
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public ReadOnly Property IndexBuffer() As IndexBuffer
-            Get
-                Return myIndexBuffer
-            End Get
-        End Property
 
         ''' <summary>
         ''' Creates vertex and index buffers on the Graphics Device and copies object vertices and indices to them.
@@ -332,6 +342,7 @@ Namespace EternalCodeworks.ForgeWorks
             sr.Read(tb, 0, 4)
             Return BitConverter.ToSingle(tb, 0)
         End Function
+
     End Class
 
 

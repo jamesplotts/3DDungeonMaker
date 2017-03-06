@@ -89,8 +89,8 @@ Namespace EternalCodeworks.ForgeWorks
                     Dim fs As New FileStream(f, FileMode.Open)
                     o = STLObject.LoadSTL(fs, pvtMainColor, True)
                     MessageBox.Show(o.Vertices(0).ToString)
-                    pvtSTLObjects.Add(s, o)
-                    o.filename = s2
+                    AddSTLObject(s, o)
+                    o.filename = f
                     pvtCacheImageGenList.Add(o)
                     fs.Close()
 
@@ -125,66 +125,14 @@ Namespace EternalCodeworks.ForgeWorks
 
         End Sub
 
+        Private Sub AddSTLObject(ByVal key As String, ByVal o As STLObject)
+            AddHandler o.OptimizationCompleted, AddressOf STLObject_OptimizationCompleted
+            pvtSTLObjects.Add(key, o)
+        End Sub
+
         Private Sub STLObject_OptimizationCompleted(ByVal o As Object, ByVal e As EventArgs)
 
         End Sub
-
-        'Public Sub LoadTiles()
-
-
-        '    Dim t As String = My.Computer.FileSystem.SpecialDirectories.MyDocuments & "\My Tiles"
-
-
-
-        '    If Directory.Exists(t) Then
-        '        Dim folders() As String = Directory.GetDirectories(t)
-        '        Dim files() As String
-        '        Dim fStream As FileStream
-        '        Dim sReader As StreamReader
-        '        Dim sArray() As String
-        '        Dim ltile As Tile
-        '        Dim tf As String, tf2 As String
-        '        Dim Index As Integer = 0
-        '        pvt_Tiles = New List(Of Tile)
-        '        For Each folder As String In folders
-        '            files = Directory.GetFiles(folder, "*.txt")
-        '            For Each F As String In files
-        '                'Try
-        '                fStream = New System.IO.FileStream(F, System.IO.FileMode.Open)
-        '                sReader = New System.IO.StreamReader(fStream)
-        '                Index = 0
-        '                sArray = Nothing
-        '                Do While sReader.Peek >= 0
-        '                    ReDim Preserve sArray(Index)
-        '                    sArray(Index) = sReader.ReadLine
-        '                    Index += 1
-        '                Loop
-        '                fStream.Close()
-        '                sReader.Close()
-        '                If sArray.Length > 2 Then
-        '                    ltile = New Tile(Path.GetFileNameWithoutExtension(F), sArray(0), Single.Parse(sArray(1)), Single.Parse(sArray(2)))
-        '                    tf = F.Substring(0, F.Length - 4) + ".png"
-        '                    tf2 = F.Substring(0, F.Length - 4) + ".top.png"
-        '                    ltile.PaletteImage(0) = Bitmap.FromFile(tf)
-        '                    ltile.TileImage = Bitmap.FromFile(tf2)
-        '                    pvt_Tiles.Add(ltile)
-        '                End If
-        '                'Catch e As Exception
-
-        '                'End Try
-
-        '            Next
-
-
-        '        Next
-
-        '    Else
-        '        My.Computer.FileSystem.CreateDirectory(t)
-        '    End If
-
-
-        'End Sub
-
 
         Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
             Dim s As String = dir
