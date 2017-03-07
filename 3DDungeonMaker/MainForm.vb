@@ -21,6 +21,7 @@ Namespace EternalCodeworks.ForgeWorks
         Private pvtMainMap As New MapPage
         Private pvtTileset As New Tileset
         Private pvtCacheImageGenList As New List(Of STLObject)
+        Private pvtCountOfCurrentRunningOptimizations As Int32
 
 
 
@@ -95,6 +96,8 @@ Namespace EternalCodeworks.ForgeWorks
                     Else
                         Dim fs As New FileStream(f, FileMode.Open)
                         o = STLObject.LoadSTL(fs, pvtMainColor, True)
+                        pvtCountOfCurrentRunningOptimizations += 1
+                        UpdateOptimizationPanel()
                         AddSTLObject(s, o)
                         o.filename = f
                         pvtCacheImageGenList.Add(o)
@@ -141,6 +144,8 @@ Namespace EternalCodeworks.ForgeWorks
             Dim stlo As STLObject = CType(o, STLObject)
             Dim s As String = Path.GetDirectoryName(stlo.filename) + "\cache\" + Path.GetFileNameWithoutExtension(stlo.filename) + ".Optimized"
             Try
+                pvtCountOfCurrentRunningOptimizations -= 1
+                UpdateOptimizationPanel()
                 Dim fs As New FileStream(s, FileMode.OpenOrCreate)
                 stlo.SaveOptimized(fs)
                 fs.Close()
@@ -149,6 +154,15 @@ Namespace EternalCodeworks.ForgeWorks
             End Try
         End Sub
 
+        Private Sub UpdateOptimizationPanel()
+            If pvtCountOfCurrentRunningOptimizations > 0 Then
+                OptimizationPanel.Text = "Optimizations Running: " + pvtCountOfCurrentRunningOptimizations.ToString
+                OptimizationPanel.Visible = True
+            Else
+                OptimizationPanel.Text = ""
+                OptimizationPanel.Visible = False
+            End If
+        End Sub
 
         Private Sub PopulateTreeView(ByVal dir As String, ByVal parentNode As TreeNode)
             Dim s As String = dir

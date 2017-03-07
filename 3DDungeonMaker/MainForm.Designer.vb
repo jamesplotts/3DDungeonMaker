@@ -65,6 +65,10 @@ Partial Class MainForm
             Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
             Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
             Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
+            Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
+            Me.ToolStripStatusLabel2 = New System.Windows.Forms.ToolStripStatusLabel()
+            Me.ToolStripStatusLabel3 = New System.Windows.Forms.ToolStripStatusLabel()
+            Me.OptimizationPanel = New System.Windows.Forms.ToolStripStatusLabel()
             Me.MenuStrip1.SuspendLayout()
             Me.ToolStripContainer1.ContentPanel.SuspendLayout()
             Me.ToolStripContainer1.TopToolStripPanel.SuspendLayout()
@@ -81,6 +85,7 @@ Partial Class MainForm
             Me.SplitContainer2.SuspendLayout()
             Me.Panel2.SuspendLayout()
             Me.DdContainer1.SuspendLayout()
+            Me.StatusStrip1.SuspendLayout()
             Me.ToolStrip1.SuspendLayout()
             Me.ToolStrip2.SuspendLayout()
             Me.SuspendLayout()
@@ -334,6 +339,7 @@ Partial Class MainForm
             '
             'StatusStrip1
             '
+            Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabel1, Me.ToolStripStatusLabel2, Me.ToolStripStatusLabel3, Me.OptimizationPanel})
             Me.StatusStrip1.Location = New System.Drawing.Point(0, 356)
             Me.StatusStrip1.Name = "StatusStrip1"
             Me.StatusStrip1.Size = New System.Drawing.Size(970, 22)
@@ -405,6 +411,30 @@ Partial Class MainForm
             '
             Me.OpenFileDialog1.FileName = "OpenFileDialog1"
             '
+            'ToolStripStatusLabel1
+            '
+            Me.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
+            Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(684, 17)
+            Me.ToolStripStatusLabel1.Spring = True
+            Me.ToolStripStatusLabel1.Text = "ToolStripStatusLabel1"
+            '
+            'ToolStripStatusLabel2
+            '
+            Me.ToolStripStatusLabel2.Name = "ToolStripStatusLabel2"
+            Me.ToolStripStatusLabel2.Size = New System.Drawing.Size(120, 17)
+            Me.ToolStripStatusLabel2.Text = "ToolStripStatusLabel2"
+            '
+            'ToolStripStatusLabel3
+            '
+            Me.ToolStripStatusLabel3.Name = "ToolStripStatusLabel3"
+            Me.ToolStripStatusLabel3.Size = New System.Drawing.Size(120, 17)
+            Me.ToolStripStatusLabel3.Text = "ToolStripStatusLabel3"
+            '
+            'OptimizationPanel
+            '
+            Me.OptimizationPanel.Name = "OptimizationPanel"
+            Me.OptimizationPanel.Size = New System.Drawing.Size(0, 17)
+            '
             'MainForm
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -436,6 +466,8 @@ Partial Class MainForm
             Me.SplitContainer2.ResumeLayout(False)
             Me.Panel2.ResumeLayout(False)
             Me.DdContainer1.ResumeLayout(False)
+            Me.StatusStrip1.ResumeLayout(False)
+            Me.StatusStrip1.PerformLayout()
             Me.ToolStrip1.ResumeLayout(False)
             Me.ToolStrip1.PerformLayout()
             Me.ToolStrip2.ResumeLayout(False)
@@ -483,6 +515,10 @@ Partial Class MainForm
         Friend WithEvents btnTogglePaletteView As System.Windows.Forms.Button
         Friend WithEvents lvPalette As System.Windows.Forms.ListView
         Friend WithEvents ilPaletteSmall As System.Windows.Forms.ImageList
+        Friend WithEvents ToolStripStatusLabel1 As System.Windows.Forms.ToolStripStatusLabel
+        Friend WithEvents ToolStripStatusLabel2 As System.Windows.Forms.ToolStripStatusLabel
+        Friend WithEvents ToolStripStatusLabel3 As System.Windows.Forms.ToolStripStatusLabel
+        Friend WithEvents OptimizationPanel As System.Windows.Forms.ToolStripStatusLabel
     End Class
 
 end namespace
