@@ -319,7 +319,7 @@ Namespace EternalCodeworks.ForgeWorks
             Dim bolRotateToggle As Boolean
             If GetScreen = True Then
                 Static bolAlreadyRun As Boolean
-                If Not pvtCurrentDrawItem Is Nothing AndAlso pvtCurrentDrawItem.VerticesOptimized = True AndAlso bolAlreadyRun = False Then ' rendering to a RenderTarget2D
+                If Not pvtCurrentDrawItem Is Nothing AndAlso bolAlreadyRun = False Then ' rendering to a RenderTarget2D
                     bolAlreadyRun = True
                     OutputFolders = Path.GetDirectoryName(pvtCurrentDrawItem.filename)
                     For CurDir As Int32 = 0 To 4
@@ -332,7 +332,11 @@ Namespace EternalCodeworks.ForgeWorks
                                 pass.Apply()
                                 GraphicsDevice.Indices = pvtCurrentDrawItem.IndexBuffer
                                 GraphicsDevice.SetVertexBuffer(pvtCurrentDrawItem.VertexBuffer)
-                                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, CInt(pvtCurrentDrawItem.Indices.Count / 3))
+                                If pvtCurrentDrawItem.VerticesOptimized = True Then
+                                    GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, CInt(pvtCurrentDrawItem.Indices.Count / 3))
+                                Else
+                                    GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, pvtCurrentDrawItem.Vertices.ToArray(), 0, pvtCurrentDrawItem.Vertices.Count, VertexPositionColorNormal.VertexDeclaration)
+                                End If
                             Next
                             bolRunOnce = False
                         Loop

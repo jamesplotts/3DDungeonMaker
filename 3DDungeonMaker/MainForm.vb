@@ -85,27 +85,29 @@ Namespace EternalCodeworks.ForgeWorks
             Dim s As String, s2 As String, i As Int32
             For Each f As String In contents
                 s = Path.GetFileNameWithoutExtension(f)
-                s2 = dir + "\cache\" + s + ".Optimized"
-                Try
-                    If File.Exists(s2) Then
-                        Dim fs As New FileStream(s2, FileMode.Open)
-                        o = STLObject.LoadOptimized(fs)
-                        AddSTLObject(s, o)
-                        o.filename = f
-                        fs.Close()
-                    Else
-                        Dim fs As New FileStream(f, FileMode.Open)
-                        o = STLObject.LoadSTL(fs, pvtMainColor, True)
-                        pvtCountOfCurrentRunningOptimizations += 1
-                        UpdateOptimizationPanel()
-                        AddSTLObject(s, o)
-                        o.filename = f
-                        pvtCacheImageGenList.Add(o)
-                        fs.Close()
-                    End If
-                Catch ex As Exception
+                If Not pvtSTLObjects.ContainsKey(s) Then
+                    s2 = dir + "\cache\" + s + ".Optimized"
+                    Try
+                        If File.Exists(s2) Then
+                            Dim fs As New FileStream(s2, FileMode.Open)
+                            o = STLObject.LoadOptimized(fs)
+                            AddSTLObject(s, o)
+                            o.filename = f
+                            fs.Close()
+                        Else
+                            Dim fs As New FileStream(f, FileMode.Open)
+                            o = STLObject.LoadSTL(fs, pvtMainColor, True)
+                            pvtCountOfCurrentRunningOptimizations += 1
+                            UpdateOptimizationPanel()
+                            AddSTLObject(s, o)
+                            o.filename = f
+                            pvtCacheImageGenList.Add(o)
+                            fs.Close()
+                        End If
+                    Catch ex As Exception
 
-                End Try
+                    End Try
+                End If
                 s2 = dir + "\cache\" + s + ".Top.png"
 
                 If File.Exists(s2) Then
