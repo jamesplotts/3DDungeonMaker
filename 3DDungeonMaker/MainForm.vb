@@ -96,9 +96,9 @@ Namespace EternalCodeworks.ForgeWorks
                             fs.Close()
                         Else
                             Dim fs As New FileStream(f, FileMode.Open)
-                            o = STLObject.LoadSTL(fs, pvtMainColor, True)
-                            pvtCountOfCurrentRunningOptimizations += 1
-                            UpdateOptimizationPanel()
+                            pvtMainColor = Microsoft.Xna.Framework.Color.DarkGray
+                            o = STLObject.LoadSTL(fs, pvtMainColor, False)
+                            
                             AddSTLObject(s, o)
                             o.filename = f
                             pvtCacheImageGenList.Add(o)
@@ -116,6 +116,7 @@ Namespace EternalCodeworks.ForgeWorks
                         ilPalette.Images.Add(b)
                         ilPaletteSmall.Images.Add(b)
                     Catch ex As Exception
+
                     End Try
                     lvPalette.Items.Add(s, i)
                     i += 1
@@ -125,7 +126,26 @@ Namespace EternalCodeworks.ForgeWorks
                 End If
             Next
             lvPalette.Refresh()
+            If Not TileOptimizing Then
+                For Each o2 As STLObject In pvtSTLObjects.Values
+                    If Not o2.VerticesOptimized Then
+                        o2.OptimizeVertices()
+                        Exit For
+                    End If
+                Next
+                pvtCountOfCurrentRunningOptimizations += 1
+                UpdateOptimizationPanel()
+            End If
         End Sub
+
+        Public ReadOnly Property TileOptimizing() As Boolean
+            Get
+                For Each o As STLObject In pvtSTLObjects.Values
+                    If o.IsOptimizing Then Return True
+                Next
+                Return False
+            End Get
+        End Property
 
         Private Sub TreeView2_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles tvTileFolders.AfterSelect
             DdContainer1.Text = e.Node.FullPath

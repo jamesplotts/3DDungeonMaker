@@ -196,11 +196,19 @@ Namespace EternalCodeworks.ForgeWorks
             thread.Start()
         End Sub
 
+        Private pvtIsOptimizing As Boolean
+        Public ReadOnly Property IsOptimizing() As Boolean
+            Get
+                Return pvtIsOptimizing
+            End Get
+        End Property
+
         Private Sub pvtOptimizeVertices()
             Dim newlist As New List(Of VertexPositionColorNormal)
             Dim FoundSameVert As Boolean
             Dim index As Int32
             Dim lIndicies As New List(Of Int32)
+            pvtIsOptimizing = True
             For Each v As VertexPositionColorNormal In Vertices
                 FoundSameVert = False
                 index = 0
@@ -223,6 +231,7 @@ Namespace EternalCodeworks.ForgeWorks
             Vertices = newlist
             Indices = lIndicies
             pvtVerticesOptimized = True
+            pvtIsOptimizing = False
             RaiseEvent OptimizationCompleted(Me, New EventArgs)
         End Sub
 #End Region

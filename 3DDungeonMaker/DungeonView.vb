@@ -54,7 +54,7 @@ Namespace EternalCodeworks.ForgeWorks
         Private ObjectCenter As Matrix = Matrix.Identity
         Private RotateY As Matrix = Matrix.Identity
         Private RotateTop As Matrix = Matrix.Identity
-        Private pvtDefaultLighting As Boolean = False
+        Private pvtDefaultLighting As Boolean = True
         Private _total_frames As Int32 = 0
         Private _elapsed_time As Double = 0.0F
         Private _fps As Int32 = 0
@@ -74,6 +74,8 @@ Namespace EternalCodeworks.ForgeWorks
         Public Sub New(ByRef vMainForm As MainForm)
             graphics = New GraphicsDeviceManager(Me)
             Content.RootDirectory = "Content"
+            'graphics.PreferredBackBufferWidth = 500
+            'graphics.PreferredBackBufferHeight = 500
             Me.MainForm = vMainForm
             Me.drawSurface = vMainForm.getDrawSurface()
             AddHandler graphics.PreparingDeviceSettings, New EventHandler(Of PreparingDeviceSettingsEventArgs)(AddressOf graphics_PreparingDeviceSettings)
@@ -290,9 +292,9 @@ Namespace EternalCodeworks.ForgeWorks
             If MainForm.CacheImageGenList.Count > 0 Then
                 If pvtCurrentDrawItem Is Nothing Then
                     Dim cigitem As STLObject = MainForm.CacheImageGenList.Item(0)
-                    If cigitem.CacheDrawn = False AndAlso cigitem.VerticesOptimized = True Then
+                    If cigitem.CacheDrawn = False Then
                         pvtCurrentDrawItem = cigitem
-                        pvtCurrentDrawItem.CopyToBuffers(GraphicsDevice)
+                        If pvtCurrentDrawItem.VerticesOptimized = True Then pvtCurrentDrawItem.CopyToBuffers(GraphicsDevice)
                         MainForm.CacheImageGenList.Remove(cigitem)
                         GetScreen = True
                     End If
@@ -310,32 +312,80 @@ Namespace EternalCodeworks.ForgeWorks
         ''' </summary>
         ''' <param name="gameTime">Provides a snapshot of timing values.</param>
         Protected Overrides Sub Draw(gameTime As GameTime)
+            _total_frames += 1 ' FPS Counter
+
+            ' Set various matrices
+            
+            worldMatrix = ObjectCenter * Matrix.CreateScale(Scales) * Matrix.CreateRotationX(MathHelper.ToRadians(90.0F)) * RotateY * RotateTop
+            BasicEffect.Projection = projectionMatrix
+            BasicEffect.View = ViewMatrix
+            BasicEffect.World = worldMatrix
+
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue)
+            GraphicsDevice.SetVertexBuffer(vertexBuffer)
+            Dim RasterizerState As New RasterizerState()
+            RasterizerState.CullMode = CullMode.None
+
+            GraphicsDevice.RasterizerState = RasterizerState
 
 
             ' TODO: Add your drawing code here
             'pvtCurrentCIGDrawItem
             Dim OutputFolders As String
-            Dim bolRotateToggle As Boolean
             If GetScreen = True Then
                 Static bolAlreadyRun As Boolean
                 If Not pvtCurrentDrawItem Is Nothing AndAlso bolAlreadyRun = False Then ' rendering to a RenderTarget2D
                     bolAlreadyRun = True
                     OutputFolders = Path.GetDirectoryName(pvtCurrentDrawItem.filename)
-                    For CurDir As Int32 = 0 To 4
-                        screenshot = New RenderTarget2D(GraphicsDevice, width, height, False, SurfaceFormat.Color, DepthFormat.Depth24)
+                    RotateY = Matrix.Identity
+                    RotateTop = Matrix.Identity
+                    ScaleValue = ScaleValue * 1.0F
+                    FocusPoint.Z = 0
+                    FocusPoint.X = 0
+                    CameraOffset.X = 1000
+                    CameraOffset.Z = 1000
+                    Scales = New Vector3(ScaleValue, ScaleValue, ScaleValue)
+                    For CurDir As eDir = 0 To eDir.Top
+                        Select Case CurDir
+                            Case eDir.North
+                                RotateY = Matrix.Identity
+                            Case eDir.South
+                                RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(180.0F))
+                            Case eDir.West
+                                RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(-90.0F))
+                            Case eDir.East
+                                RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(90.0F))
+                            Case eDir.Top
+                                RotateTop = Matrix.CreateRotationZ(MathHelper.ToRadians(55.0F)) * Matrix.CreateRotationY(MathHelper.ToRadians(135.0F))
+                                RotateY = Matrix.Identity
+                        End Select
+                        worldMatrix = pvtCurrentDrawItem.ObjectCenter * Matrix.CreateScale(Scales) * Matrix.CreateRotationX(MathHelper.ToRadians(90.0F)) * RotateY * RotateTop
+                        BasicEffect.World = worldMatrix
+                        screenshot = New RenderTarget2D(GraphicsDevice, 1000, 1000, False, SurfaceFormat.Color, DepthFormat.Depth24)
                         GraphicsDevice.SetRenderTarget(screenshot)
+                        GraphicsDevice.SetVertexBuffer(vertexBuffer)
                         Dim bolRunOnce As Boolean = True
-                        Do While screenshot.IsContentLost Or bolRunOnce
+                        Dim ExceptionError As Boolean = False
+                        Do While screenshot.IsContentLost Or bolRunOnce Or ExceptionError
+                            ExceptionError = False
                             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue)
                             For Each pass As EffectPass In BasicEffect.CurrentTechnique.Passes
                                 pass.Apply()
-                                GraphicsDevice.Indices = pvtCurrentDrawItem.IndexBuffer
-                                GraphicsDevice.SetVertexBuffer(pvtCurrentDrawItem.VertexBuffer)
                                 If pvtCurrentDrawItem.VerticesOptimized = True Then
+                                    GraphicsDevice.Indices = pvtCurrentDrawItem.IndexBuffer
+                                    GraphicsDevice.SetVertexBuffer(pvtCurrentDrawItem.VertexBuffer)
                                     GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, CInt(pvtCurrentDrawItem.Indices.Count / 3))
                                 Else
-                                    GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, pvtCurrentDrawItem.Vertices.ToArray(), 0, pvtCurrentDrawItem.Vertices.Count, VertexPositionColorNormal.VertexDeclaration)
+                                    Dim varr() As VertexPositionColorNormal
+                                    Try
+                                        varr = pvtCurrentDrawItem.Vertices.ToArray()
+                                        GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, varr, 0, CInt(pvtCurrentDrawItem.Vertices.Count / 3), VertexPositionColorNormal.VertexDeclaration)
+                                    Catch ex As OutOfMemoryException
+                                        ExceptionError = True
+                                    Catch ex2 As Exception
+                                        ExceptionError = True
+                                        'Windows.Forms.MessageBox.Show(ex2.ToString)
+                                    End Try
                                 End If
                             Next
                             bolRunOnce = False
@@ -345,48 +395,39 @@ Namespace EternalCodeworks.ForgeWorks
                         Dim fs As New MemoryStream
                         ' save intermediate PNG image to stream
                         screenshot.SaveAsPng(fs, width, height)
+                        screenshot.Dispose()
                         screenshot = Nothing
                         ' read image from stream to a bitmap object
                         b = New Drawing.Bitmap(fs)
                         fs.Close()
-                        If BmpHasNonTransparentArea(b) Then
-                            b = CropBitmap(b, pvtCropRegion)
-                        End If
+                        fs.Dispose()
+
+                        Dim s As String = OutputFolders + "\cache\PreCrop" + Path.GetFileNameWithoutExtension(pvtCurrentDrawItem.filename) + "." + CurDir.ToString + ".png"
+                        Dim bolsuccessful As Boolean = False
+                        Do While Not bolsuccessful
+                            Try
+                                b.Save(s, System.Drawing.Imaging.ImageFormat.Png)
+                                bolsuccessful = True
+                            Catch ex As Exception
+                                'Windows.Forms.MessageBox.Show(ex.ToString)
+                            End Try
+                        Loop
+                        Try
+                            If BmpHasNonTransparentArea(b) Then
+                                b = CropBitmap(b, pvtCropRegion)
+                            End If
+                        Catch
+                        End Try
                         ' Make Background Transparent
                         b.MakeTransparent(System.Drawing.Color.CornflowerBlue)
-
-                        Dim s As String = OutputFolders + "\cache\" + Path.GetFileNameWithoutExtension(pvtCurrentDrawItem.filename) + "."
-                        If bolRotateToggle Then
-                            s += "Top"
-                        Else
-                            s += CurDir.ToString
-                        End If
-                        s += ".png"
+                        s = OutputFolders + "\cache\" + Path.GetFileNameWithoutExtension(pvtCurrentDrawItem.filename) + "." + CurDir.ToString + ".png"
                         ' save the PNG image!
-                        b.Save(s, System.Drawing.Imaging.ImageFormat.Png)
-
+                        Try
+                            b.Save(s, System.Drawing.Imaging.ImageFormat.Png)
+                        Catch
+                        End Try
                         ' launch it in system viewer
-                        Process.Start(s)
-                        If bolRotateToggle Then ' Advance image from Top-Down to North Isometric
-                            CurDir = eDir.North
-                            RotateY = Matrix.Identity
-                            bolRotateToggle = False
-                            ScaleValue = ScaleValue * 0.7F
-                            Scales = New Vector3(ScaleValue, ScaleValue, ScaleValue)
-                        Else ' Advance image to next isometric
-                            CurDir = CType(CurDir + 1, eDir)
-                            If CurDir = eDir.Top Then CurDir = eDir.North
-                            Select Case CurDir
-                                Case eDir.North
-                                    RotateY = Matrix.Identity
-                                Case eDir.South
-                                    RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(180.0F))
-                                Case eDir.West
-                                    RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(-90.0F))
-                                Case eDir.East
-                                    RotateY = Matrix.CreateRotationY(MathHelper.ToRadians(90.0F))
-                            End Select
-                        End If
+                        'Process.Start(s)
                     Next
                     pvtCurrentDrawItem.CacheDrawn = True
                     bolAlreadyRun = False
@@ -404,6 +445,15 @@ Namespace EternalCodeworks.ForgeWorks
             MyBase.Draw(gameTime)
         End Sub
 
+        Private FocusPoint As Vector3 = Vector3.Zero
+        Private CameraOffset As Vector3 = New Vector3(1000.0F, 1000.0F, 1000.0F)
+
+
+        Private ReadOnly Property ViewMatrix() As Matrix
+            Get
+                Return Matrix.CreateLookAt(CameraOffset, FocusPoint, Vector3.Up)
+            End Get
+        End Property
 
         Private pvtCropRegion As System.Drawing.Rectangle
         Private Function BmpHasNonTransparentArea(ByVal bmp As Bitmap) As Boolean
@@ -421,8 +471,26 @@ Namespace EternalCodeworks.ForgeWorks
                                 .Y = y
                                 .Width = x2 - x
                                 .Height = y2 - y
-                                If .Width > .Height Then .Height = .Width
-                                If .Height > .Width Then .Width = .Height
+                                If .Width > .Height Then
+                                    Dim diff As Int32 = .Width - .Height
+                                    Dim halfdiff As Int32 = CInt(diff / 2)
+                                    .Y -= halfdiff
+                                    If .Y < 0 Then
+                                        .Height -= .Y
+                                        .Y = 0
+                                    End If
+                                    .Height = .Width
+                                End If
+                                If .Height > .Width Then
+                                    Dim diff As Int32 = .Height - .Width
+                                    Dim halfdiff As Int32 = CInt(diff / 2)
+                                    .X -= halfdiff
+                                    If .X < 0 Then
+                                        .Width -= .X
+                                        .X = 0
+                                    End If
+                                    .Width = .Height
+                                End If
                             End With
                             Return True
                         End If
